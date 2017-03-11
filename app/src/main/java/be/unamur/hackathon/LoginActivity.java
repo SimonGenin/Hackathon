@@ -71,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
         mProgressView = findViewById(R.id.login_progress);
 
         // TODO remove this hack
-        Intent intent = new Intent(LoginActivity.this, AllPostsMapActiviy.class);
+        Intent intent = new Intent(LoginActivity.this, ManagePlotActivity.class);
         startActivity(intent);
     }
 
