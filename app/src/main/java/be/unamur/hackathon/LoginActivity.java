@@ -70,9 +70,9 @@ public class LoginActivity extends AppCompatActivity {
 
         mProgressView = findViewById(R.id.login_progress);
 
-        // TODO remove this hack
-        Intent intent = new Intent(LoginActivity.this, ManagePlotActivity.class);
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
+
     }
 
 
@@ -177,6 +177,8 @@ public class LoginActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
+            hashedPassword = password;
+
             Log.d(TAG, hashedPassword);
 
         }
@@ -206,22 +208,7 @@ public class LoginActivity extends AppCompatActivity {
             RequestManager.getInstance(LoginActivity.this).addToRequestQueue(postRequest);
             RequestManager.getInstance(LoginActivity.this).getRequestQueue().start();
 
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mPseudo)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-
-            return true;
+            return false;
         }
 
         @Override

@@ -6,7 +6,7 @@ package be.unamur.hackathon;
 
 public class APIConfig {
 
-    public static final String base_url = "";
+    public static final String base_url = "fusolar.pythonanywhere.com";
     public static final String api_url = base_url + "/api";
 
     public static final String login_url = api_url + "/login";
