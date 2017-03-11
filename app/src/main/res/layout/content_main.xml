@@ -91,4 +91,28 @@
             app:srcCompat="@drawable/point_rounded" />
     </android.support.constraint.ConstraintLayout>
 
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/itinary_btn"
+            style="@style/Widget.AppCompat.Button.Small"
+            android:layout_width="182dp"
+            android:layout_height="49dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="0dp"
+            android:background="@android:color/transparent"
+            android:text="Calculer un itinéraire"
+            android:textColor="@android:color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/car_rounded" />
+    </android.support.constraint.ConstraintLayout>
+
 </LinearLayout>

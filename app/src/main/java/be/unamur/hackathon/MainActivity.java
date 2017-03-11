@@ -18,6 +18,8 @@ public class MainActivity extends AppCompatActivity
 
     Button managePostButton;
     Button statisticsButton;
+    Button allPostsButton;
+    Button itinaryButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,12 +40,36 @@ public class MainActivity extends AppCompatActivity
 
         managePostButton = (Button) findViewById(R.id.manage_post_btn);
         statisticsButton = (Button) findViewById(R.id.statistics_btn);
+        allPostsButton = (Button) findViewById(R.id.all_posts_btn);
+        itinaryButton = (Button) findViewById(R.id.itinary_btn);
 
         managePostButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, ManagePlotActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        allPostsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AllPostsMapActiviy.class);
+                startActivity(intent);
+            }
+        });
+
+        statisticsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO
+            }
+        });
+
+        itinaryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO
             }
         });
 
