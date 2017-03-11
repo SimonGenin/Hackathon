@@ -20,8 +20,6 @@ public class RequestManager {
     private RequestManager(Context context) {
         mCtx = context;
         mRequestQueue = getRequestQueue();
-
-
     }
 
     public static synchronized RequestManager getInstance(Context context) {

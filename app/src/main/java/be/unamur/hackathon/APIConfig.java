@@ -10,5 +10,6 @@ public class APIConfig {
     public static final String api_url = base_url + "/api";
 
     public static final String login_url = api_url + "/login";
+    public static final String all_posts_url = api_url + "/posts";
 
 }

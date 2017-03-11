@@ -3,6 +3,7 @@ package be.unamur.hackathon;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -68,6 +69,10 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         mProgressView = findViewById(R.id.login_progress);
+
+        // TODO remove this hack
+        Intent intent = new Intent(LoginActivity.this, AllPostsMapActiviy.class);
+        startActivity(intent);
     }
 
 
@@ -182,7 +187,7 @@ public class LoginActivity extends AppCompatActivity {
             // TODO: attempt authentication against a network service.
 
             Map parameters = new HashMap();
-            parameters.put("pseudo", mPassword);
+            parameters.put("pseudo", mPseudo);
             parameters.put("password", hashedPassword);
 
             PostRequest postRequest = new PostRequest(APIConfig.login_url, parameters, new Response.Listener<String>() {
@@ -216,7 +221,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
 
-            // TODO: register the new account here.
             return true;
         }
 
@@ -226,7 +230,10 @@ public class LoginActivity extends AppCompatActivity {
             showProgress(false);
 
             if (success) {
-                finish();
+
+                Intent intent = new Intent(LoginActivity.this, AllPostsMapActiviy.class);
+                startActivity(intent);
+
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
