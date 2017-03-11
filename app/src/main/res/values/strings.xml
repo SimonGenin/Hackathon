@@ -2,7 +2,6 @@
 
     <string name="main_name">Share Watt</string>
 
-
     <string name="app_name">Share Watt</string>
 
 
@@ -18,7 +17,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="slogan">Gotta charge \'em up!</string>
+    <string name="slogan">No more <b>green</b> waste</string>
     <string name="title_activity_main">MainActivity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>

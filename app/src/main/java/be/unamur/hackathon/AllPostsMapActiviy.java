@@ -13,16 +13,19 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.List;
 
 public class AllPostsMapActiviy extends FragmentActivity implements OnMapReadyCallback {
 
     private final String TAG = this.getClass().getName();
 
     private GoogleMap mMap;
-
+    private List<Post> posts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +40,35 @@ public class AllPostsMapActiviy extends FragmentActivity implements OnMapReadyCa
             @Override
             public void onResponse(JSONArray response) {
                 Log.d(TAG, "Successfully reached and pull from server : " + response.toString());
+
+                try {
+
+                    for (int i = 0 ; i < response.length() ; i++) {
+
+                        Post post = new Post();
+                        JSONObject object = response.getJSONObject(i);
+
+                        post.setId(object.getInt("id"));
+                        post.setActive(object.getBoolean("active"));
+                        post.setOwner(object.getBoolean("owner"));
+                        post.setPrice((float) object.getDouble("price"));
+                        post.setLatitude(object.getInt("latitude"));
+                        post.setLongitude(object.getInt("longitude"));
+                        post.setAddress(object.getString("address"));
+                        post.setHasPlugType1(object.getBoolean("type1"));
+                        post.setHasPlugType2(object.getBoolean("type2"));
+                        post.setHasPlugType3(object.getBoolean("type3"));
+                        post.setHasPlugType4(object.getBoolean("type4"));
+
+                        posts.add(post);
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
             }
         }, new Response.ErrorListener() {
             @Override
@@ -66,10 +98,14 @@ public class AllPostsMapActiviy extends FragmentActivity implements OnMapReadyCa
         mMap = googleMap;
 
         // TODO work the data
+        for (Post p : posts) {
 
-        // Mons
+            mMap.addMarker(p.createMarkerOptions());
+
+        }
+
+        // Camera is set above Mons by default
         LatLng mons = new LatLng(50.4541, 3.9523);
-        mMap.addMarker(new MarkerOptions().position(mons).title("Mons RPZ"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(mons));
         mMap.animateCamera( CameraUpdateFactory.zoomTo( 17.0f ) );
 
