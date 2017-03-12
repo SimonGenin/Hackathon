@@ -1,5 +1,7 @@
 package be.unamur.hackathon;
 
+import android.content.SharedPreferences;
+
 /**
  * Created by simon on 11-03-17.
  */
@@ -9,9 +11,30 @@ public class User {
     private String name;
     private String firstname;
     private String pseudo;
+    private boolean owner; // is the user owner of a post ?
     private String email;
     private String address;
     private int id;
+
+    public void save(SharedPreferences preferences) {
+        preferences.edit().putString("name", name).apply();
+        preferences.edit().putString("pseudo", pseudo).apply();
+        preferences.edit().putString("firstname", firstname).apply();
+        preferences.edit().putString("email", email).apply();
+        preferences.edit().putString("address", address).apply();
+        preferences.edit().putBoolean("owner", owner).apply();
+        preferences.edit().putInt("id", id).apply();
+    }
+
+    public void load(SharedPreferences preferences) {
+        this.name = preferences.getString("name", "unknown");
+        this.firstname = preferences.getString("firstname", "unknown");
+        this.pseudo = preferences.getString("pseudo", "unknown");
+        this.owner = preferences.getBoolean("owner", false);
+        this.email = preferences.getString("email", "unknown");
+        this.address = preferences.getString("address", "unknown");
+        this.id = preferences.getInt("id", -1);
+    }
 
     public String getName() {
         return name;
@@ -60,4 +83,14 @@ public class User {
     public void setId(int id) {
         this.id = id;
     }
+
+    public boolean isOwner() {
+        return owner;
+    }
+
+    public void setOwner(boolean owner) {
+        this.owner = owner;
+    }
+
+
 }

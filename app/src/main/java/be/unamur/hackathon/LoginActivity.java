@@ -3,8 +3,8 @@ package be.unamur.hackathon;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -44,6 +44,14 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         application = (HackathonApplication) getApplication();
+
+        if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("is_saved", false)){
+            User user = new User();
+            user.load(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
+            application.connectUser(user);
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
 
         title = (TextView) findViewById(R.id.app_name_tv);
         Typeface titleTypeFace = Typeface.createFromAsset(getAssets(), "fonts/OleoScript-Regular.ttf");
@@ -85,14 +93,6 @@ public class LoginActivity extends AppCompatActivity {
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
-            cancel = true;
-        }
-
-
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
@@ -107,7 +107,7 @@ public class LoginActivity extends AppCompatActivity {
     private void preformConnection(String pseudo, String password) {
 
         Map parameters = new HashMap();
-        parameters.put("pseudo", pseudo);
+        parameters.put("username", pseudo);
         parameters.put("password", password);
 
         PostRequest postRequest = new PostRequest(APIConfig.login_url, parameters, new Response.Listener<String>() {
@@ -119,14 +119,15 @@ public class LoginActivity extends AppCompatActivity {
                     JSONObject jsonResponse = new JSONObject(response);
                     String status = jsonResponse.getString("status");
 
-                    if (status.equals("OK"))
+                    if (status.equals("ok"))
                     {
                         User user = new User();
                         user.setAddress(jsonResponse.getString("address"));
                         user.setFirstname(jsonResponse.getString("first_name"));
                         user.setEmail(jsonResponse.getString("email"));
-                        user.setName(jsonResponse.getString("name"));
+                        user.setName(jsonResponse.getString("last_name"));
                         user.setPseudo(jsonResponse.getString("username"));
+                        user.setOwner(jsonResponse.getBoolean("owner"));
                         user.setId(jsonResponse.getInt("id"));
 
                         application.connectUser(user);
@@ -158,10 +159,6 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
-    }
 
 }
 

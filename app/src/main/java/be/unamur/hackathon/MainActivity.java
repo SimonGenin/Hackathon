@@ -2,6 +2,7 @@ package be.unamur.hackathon;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -21,6 +22,11 @@ public class MainActivity extends AppCompatActivity
     Button allPostsButton;
     Button itinaryButton;
 
+    ConstraintLayout manageLayout;
+    ConstraintLayout statisticsLayout;
+    ConstraintLayout allLayout;
+    ConstraintLayout itenaryLayout;
+
     private HackathonApplication application;
 
     @Override
@@ -30,6 +36,15 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        application = (HackathonApplication) getApplication();
+
+        manageLayout = (ConstraintLayout) findViewById(R.id.manage_post_layout);
+        statisticsLayout = (ConstraintLayout) findViewById(R.id.statistics_layout);
+
+        if (!application.getCurrentConnectedUser().isOwner()) {
+            manageLayout.setVisibility(View.GONE);
+            statisticsLayout.setVisibility(View.GONE);
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

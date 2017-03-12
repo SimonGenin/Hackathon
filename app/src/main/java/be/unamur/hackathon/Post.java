@@ -3,14 +3,16 @@ package be.unamur.hackathon;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.Serializable;
+
 /**
  * Created by simon on 11-03-17.
  */
 
-public class Post {
+public class Post implements Serializable {
 
     private int id;
-    private boolean owner; // is the user owner of a post ?
+
     private double latitude;
     private double longitude;
     private float price;
@@ -38,14 +40,6 @@ public class Post {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public boolean isOwner() {
-        return owner;
-    }
-
-    public void setOwner(boolean owner) {
-        this.owner = owner;
     }
 
     public double getLatitude() {

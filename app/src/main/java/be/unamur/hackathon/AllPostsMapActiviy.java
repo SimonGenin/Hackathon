@@ -1,23 +1,25 @@
 package be.unamur.hackathon;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AllPostsMapActiviy extends FragmentActivity implements OnMapReadyCallback {
@@ -28,7 +30,7 @@ public class AllPostsMapActiviy extends FragmentActivity implements OnMapReadyCa
     private List<Post> posts;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_posts_map_activiy);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -36,24 +38,34 @@ public class AllPostsMapActiviy extends FragmentActivity implements OnMapReadyCa
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        JsonArrayRequest jsonRequest = new JsonArrayRequest(APIConfig.all_posts_url, new Response.Listener<JSONArray>() {
+        posts = new ArrayList<>();
+
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(APIConfig.all_posts_url, null,new Response.Listener<JSONObject>() {
             @Override
-            public void onResponse(JSONArray response) {
-                Log.d(TAG, "Successfully reached and pull from server : " + response.toString());
+            public void onResponse(JSONObject response) {
+
 
                 try {
 
-                    for (int i = 0 ; i < response.length() ; i++) {
+                    String status = response.getString("status");
+
+                    if (status.equals("ko")) {
+                        Toast.makeText(AllPostsMapActiviy.this, "Erreur pendant la réception des données", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    JSONArray allPosts = response.getJSONArray("posts");
+
+                    for (int i = 0 ; i < allPosts.length() ; i++) {
 
                         Post post = new Post();
-                        JSONObject object = response.getJSONObject(i);
+                        JSONObject object = allPosts.getJSONObject(i);
 
                         post.setId(object.getInt("id"));
                         post.setActive(object.getBoolean("active"));
-                        post.setOwner(object.getBoolean("owner"));
                         post.setPrice((float) object.getDouble("price"));
-                        post.setLatitude(object.getInt("latitude"));
-                        post.setLongitude(object.getInt("longitude"));
+                        post.setLatitude(object.getDouble("latitude"));
+                        post.setLongitude(object.getDouble("longitude"));
                         post.setAddress(object.getString("address"));
                         post.setHasPlugType1(object.getBoolean("type1"));
                         post.setHasPlugType2(object.getBoolean("type2"));
@@ -61,6 +73,12 @@ public class AllPostsMapActiviy extends FragmentActivity implements OnMapReadyCa
                         post.setHasPlugType4(object.getBoolean("type4"));
 
                         posts.add(post);
+                    }
+
+                    for (Post p : posts) {
+
+                        mMap.addMarker(p.createMarkerOptions());
+
 
                     }
 
@@ -97,12 +115,24 @@ public class AllPostsMapActiviy extends FragmentActivity implements OnMapReadyCa
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // TODO work the data
-        for (Post p : posts) {
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
 
-            mMap.addMarker(p.createMarkerOptions());
+                for (Post p : posts) {
 
-        }
+                    if (p.getLatitude() == marker.getPosition().latitude && p.getLongitude() == marker.getPosition().longitude) {
+
+                        Intent intent = new Intent(AllPostsMapActiviy.this, DetailsPostActivity.class);
+                        intent.putExtra("post", p);
+                        startActivity(intent);
+                    }
+
+                }
+
+                return false;
+            }
+        });
 
         // Camera is set above Mons by default
         LatLng mons = new LatLng(50.4541, 3.9523);
